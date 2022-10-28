@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ProteinIterator {
     private static Path inputPath;
@@ -16,8 +15,7 @@ public class ProteinIterator {
     public static String proteinHeader;
 
     private static String fastaParser() {
-        Scanner console = new Scanner(System.in);
-        inputPath = Path.of(console.nextLine());
+        inputPath = Path.of(BNPsCleave.usageArgs[1]);
         String outputProteinLine = null;
         try (BufferedReader bufferedReader = Files.newBufferedReader(inputPath.toAbsolutePath())) {
             while (bufferedReader.ready()) {

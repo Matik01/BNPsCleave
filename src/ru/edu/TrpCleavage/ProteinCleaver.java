@@ -7,15 +7,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProteinIterator {
+public class ProteinCleaver {
     private static Path inputPath;
 
-    public static ArrayList<ArrayList<String>> cleavedSeq = new ArrayList<>();
+    private static ArrayList<ArrayList<String>> cleavedSeq = new ArrayList<>();
 
-    public static String proteinHeader;
+    private static String proteinHeader;
 
     private static String fastaParser() {
-        inputPath = Path.of(BNPsCleave.usageArgs[1]);
+        inputPath = Path.of(BNPsCleave.USAGE_ARGS[1]);
         String outputProteinLine = null;
         try (BufferedReader bufferedReader = Files.newBufferedReader(inputPath.toAbsolutePath())) {
             while (bufferedReader.ready()) {
@@ -31,6 +31,15 @@ public class ProteinIterator {
         }
         return outputProteinLine;
     }
+
+    public static ArrayList<ArrayList<String>> getCleavedSeq(){
+        return cleavedSeq;
+    }
+
+    public static String getProteinHeader(){
+        return proteinHeader;
+    }
+
 
     public static void cleavage() {
         ArrayList<String> proteinSeq = new ArrayList<>();

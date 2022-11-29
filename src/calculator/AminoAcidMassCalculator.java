@@ -1,4 +1,4 @@
-package ru.edu.TrpCleavage;
+package calculator;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AminoAcidMassCalculator {
+public class AminoAcidMassCalculator implements MassCalculator {
     private Path outputFilePath;
     private ArrayList<char[]> protSeq = new ArrayList<>();
 
@@ -40,21 +40,29 @@ public class AminoAcidMassCalculator {
     private HashMap<char[], Double> cleavedMass = new HashMap<>();
 
 
+
     public AminoAcidMassCalculator(ArrayList<ArrayList<String>> protSequence, String header) {
-        for (ArrayList<String> arrayList: protSequence){
-            for (String line: arrayList){
-                char[] chars= line.toCharArray();
+        for (ArrayList<String> arrayList : protSequence) {
+            for (String line : arrayList) {
+                char[] chars = line.toCharArray();
                 protSeq.add(chars);
             }
         }
         this.protHead = header;
     }
 
-    public void setOutputFilePath(String filePath){
-        outputFilePath = Path.of(filePath);
-        toFile();
+    public HashMap<char[], Double> getCleavedMass() {
+        return cleavedMass;
     }
 
+    public void setOutputFilePath(String filePath) {
+        outputFilePath = Path.of(filePath);
+        toFile();
+        saveToFilePath(outputFilePath.toAbsolutePath());
+
+    }
+
+    @Override
     public void calcMass() {
         for (int i = 0; i < protSeq.size(); i++) {
             Double mass = 0.0;
@@ -66,8 +74,8 @@ public class AminoAcidMassCalculator {
         }
     }
 
-    private void toFile(){
-        if (Files.notExists(this.outputFilePath)){
+    private void toFile() {
+        if (Files.notExists(this.outputFilePath)) {
             try {
                 Files.createFile(this.outputFilePath);
                 System.out.println("File created!");
@@ -75,11 +83,14 @@ public class AminoAcidMassCalculator {
                 throw new RuntimeException(e);
             }
         }
+    }
 
-        try(BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFilePath.toAbsolutePath())){
+    private void saveToFilePath(Path outputFilePath) {
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(outputFilePath)) {
+            int oligoNumber = 0;
             bufferedWriter.write(protHead + "\n");
-            for (Map.Entry<char[], Double> entry: cleavedMass.entrySet()){
-                String outputLine = String.valueOf(entry.getKey()) + " Oligo mass: " + entry.getValue() + "\n";
+            for (Map.Entry<char[], Double> entry : cleavedMass.entrySet()) {
+                String outputLine = ++oligoNumber +  ": " + String.valueOf(entry.getKey()) + " Oligo mass: " + entry.getValue() + "\n";
                 bufferedWriter.write(outputLine);
             }
         } catch (IOException e) {
@@ -87,5 +98,12 @@ public class AminoAcidMassCalculator {
         }
     }
 
+    public Path getOutputFilePath() {
+        return outputFilePath;
+    }
+
+    public String getProtHead() {
+        return protHead;
+    }
 
 }

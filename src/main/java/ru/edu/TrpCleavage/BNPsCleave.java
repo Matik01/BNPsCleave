@@ -26,7 +26,7 @@ public class BNPsCleave {
         }
         if (!showUsage) {
             System.err.println("Usage: ");
-            System.err.println("[--modif <flag to calculate possible protein modifications.\nCreates new file in directory automatically>]");
+            System.err.println("[--modif <flag to calculate possible protein modifications.\nCreates new file in directory automatically>].");
             System.err.print("[-I <path to fasta file>] [-O <path to output text file>].");
         }
     }
